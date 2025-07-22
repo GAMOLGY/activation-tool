@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>توليد كود التفعيل</title>
+  <style>
+    body {
+      font-family: 'Cairo', Tahoma, Arial, sans-serif;
+      background: #f7f7fa;
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 350px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #0002;
+      padding: 32px 24px;
+    }
+    h2 {
+      color: #2d2d6a;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 18px;
+      border-radius: 6px;
+      border: 1px solid #bbb;
+      font-size: 1.08em;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #2d2d6a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1em;
+      cursor: pointer;
+      margin-bottom: 10px;
+    }
+    button:active {
+      background: #1a1a3a;
+    }
+    .result {
+      background: #e3f2fd;
+      color: #1976d2;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1.15em;
+      margin-bottom: 10px;
+      word-break: break-word;
+      display: none;
+    }
+    .copy-btn {
+      background: #1976d2;
+      color: #fff;
+      margin-top: 0;
+      display: none;
+    }
+    .copied-msg {
+      text-align: center;
+      font-size: 14px;
+      color: green;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>توليد كود التفعيل</h2>
+    <label>رقم الجهاز (Serial):</label>
+    <input id="serial" type="text" placeholder="أدخل رقم الجهاز كما يظهر للمستخدم" autocomplete="off">
+
+    <label>مدة التجربة (أيام):</label>
+    <input id="days" type="number" min="1" max="999" value="14">
+
+    <button onclick="generateCode()">توليد كود التفعيل</button>
+
+    <div id="result" class="result"></div>
+    <button onclick="copyCode()" id="copyBtn" class="copy-btn">نسخ الكود</button>
+    <div id="copiedMsg" class="copied-msg">✅ تم نسخ الكود</div>
+  </div>
+
+  <script>
+    function generateCode() {
+      const serial = document.getElementById('serial').value.trim();
+      const days = document.getElementById('days').value.trim();
+      const resultDiv = document.getElementById('result');
+      const copyBtn = document.getElementById('copyBtn');
+      const copiedMsg = document.getElementById('copiedMsg');
+
+      if (!serial || !days) {
+        resultDiv.style.display = 'block';
+        resultDiv.style.background = '#ffe6e6';
+        resultDiv.style.color = '#d32f2f';
+        resultDiv.innerText = 'يرجى إدخال رقم الجهاز ومدة التجربة.';
+        copyBtn.style.display = 'none';
+        copiedMsg.style.display = 'none';
+        return;
+      }
+
+      const cleaned = serial.replace(/[^A-Za-z0-9]/g, '').slice(-6) || '000000';
+      const code = 'PS-' + cleaned + '-' + days;
+
+      resultDiv.style.display = 'block';
+      resultDiv.style.background = '#e3f2fd';
+      resultDiv.style.color = '#1976d2';
+      resultDiv.innerText = code;
+
+      copyBtn.style.display = 'block';
+      copiedMsg.style.display = 'none';
+    }
+
+    function copyCode() {
+      const code = document.getElementById('result').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        document.getElementById('copiedMsg').style.display = 'block';
+      });
+    }
+  </script>
+</body>
+</html>
